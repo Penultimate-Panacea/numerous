@@ -1,0 +1,16 @@
+[package]
+name = "numerous"
+version = "0.1.0"
+edition = "2021"
+authors = ["Rian Fantozzi"]
+description = "A set of tools to finding and classifying special numbers"
+repository = "https://github.com/Penultimate-Panacea/numerous"
+readme = "README.md"
+license = "CC0 1.0 Universal"
+keywords = ["math", "achilles", "integers"]
+categories = ["mathematics"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+primal = "0.3.2"
