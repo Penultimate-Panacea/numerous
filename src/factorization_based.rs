@@ -1,25 +1,16 @@
-use primal::is_prime;
+use prime_factorization::Factorization;
 
-pub const TEST_PRIMES: [i64; 6] = [2,3,7_789,14_221,891_248_191, 10_000_000_019];
+pub const TEST_POWERFUL:[i64; 53] = [1, 4, 8, 9, 16, 25, 27, 32, 36, 49, 64, 72, 81, 100, 108, 121, 125, 128, 144, 169, 196, 200, 216, 225, 243, 256, 288, 289, 324, 343, 361, 392, 400, 432, 441, 484, 500, 512, 529, 576, 625, 648, 675, 676, 729, 784, 800, 841, 864, 900, 961, 968, 972];
 
-    /// Returns a boolean value, true if prime, false if not.
-    /// Extends the use of the `primal::is_prime` by handling i64 numbers, and will be expanded in the future to handle i128 
-    /// # Arguments 
-    /// 
-    /// * 'testee' - An i64 number to be checked against the primal crates's `is_prime` function. 
-    /// 
-pub fn is_prime_extended(testee: i64) -> bool {
 
-    if testee < 0{
-        false
+pub fn is_powerful(testee: i64) -> bool {
+    let unsigned_testee = testee.unsigned_abs();
+    let factor_factory = Factorization::run(unsigned_testee);
+        for factor in factor_factory.factors{
+        if factor * factor % unsigned_testee == 0  { //A powerful number is a positive integer m such that for every prime number p dividing m, p2 also divides m.
+            return true
+        }
     }
-    else {
-        let unsigned_testee:u64 = testee.unsigned_abs();
-        is_prime(unsigned_testee)
-    }
+    false
 }
 
-
-fn is_powerful(testee: i64) -> bool {
-    primal::
-}
