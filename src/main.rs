@@ -2,12 +2,12 @@
 #![deny(clippy::pedantic)]
 #![warn(clippy::cargo)]
 
-mod factorization;
+mod factorization_based;
 
 
 fn main() {
-    for i in factorization::TEST_PRIMES{
-        let a = factorization::is_prime_extended(i);
+    for i in factorization_based::TEST_PRIMES{
+        let a = factorization_based::is_prime_extended(i);
         println!("{a}");
     };
 }
