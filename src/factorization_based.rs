@@ -21,8 +21,10 @@ pub const TEST_POWERFUL:[i32; 52] = [1, 4, 8, 9, 16, 25, 27, 32, 36, 49, 64, 72,
 /// 
 ///  # Example
 ///  ```
-/// TEST_POWERFUL.into_par_iter().for_each(|i| {
-/// assert_eq!(true, is_powerful(i));};
+/// let powerful_num: i32 = 200;
+/// let not_powerful_num: i32 = 19;
+/// assert_eq!(true, is_powerful(powerful_num);
+/// assert_eq!(false, is_powerful())
 /// ```    
 /// 
 ///  # Todo
@@ -64,4 +66,7 @@ fn test_is_powerful(){
     rayon::prelude::ParallelIterator::for_each(rayon::prelude::IntoParallelIterator::into_par_iter(TEST_POWERFUL), |i| {
         assert_eq!(true, is_powerful(i));
     });
+    assert_eq!(false, is_powerful(19));
+    assert_eq!(false, is_powerful(-20));
+    assert_eq!(false, is_powerful(-25));
 }
