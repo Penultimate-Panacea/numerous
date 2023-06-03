@@ -6,8 +6,9 @@ mod factorization_based;
 
 
 fn main() {
-    for i in factorization_based::TEST_POWERFUL{
-        let a = factorization_based::is_powerful(i);
-        println!("{a}");
-    };
+    println!("{}", factorization_based::is_powerful(1)); // First Powerful
+    println!("{}", factorization_based::is_powerful(4)); // Second Powerful 2^2
+    println!("{}", factorization_based::is_powerful(8)); // Third Powerful 2^3
+    println!("{}", factorization_based::is_powerful(343)); // 7^3
+    println!("{}", factorization_based::is_powerful(441)); // 7^2*3^2
 }
