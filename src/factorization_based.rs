@@ -1,11 +1,12 @@
 use prime_factorization::Factorization;
+use rayon::prelude::{IntoParallelIterator, ParallelIterator};
 
 
-pub const TEST_POWERFUL:[i32; 52] = [1, 4, 8, 9, 16, 25, 27, 32, 36, 49, 64, 72, 81,
-                                    100, 108, 121, 125, 128, 144, 169, 196, 200, 216, 
-                                    225, 243, 256, 288, 289, 324, 343, 361, 392, 400, 
-                                    432, 441, 484, 500, 512, 529, 576, 625, 648, 675, 
-                                    676, 729, 784, 800, 841, 864, 900, 961, 968];
+pub const TEST_POWERFUL:[i32; 30] = [1, 4, 8, 9, 16, 25, 27, 32, 36, 49,
+                                 64, 72, 81, 100, 108, 121, 125, 128, 144, 169,
+                                 196, 200, 216, 225, 243, 256, 288, 289, 324, 343];
+
+pub const TEST_ACHILLES:[i32; 30] = [72, 108, 200, 288, 392, 500, 648, 675, 800, 968, 972, 1125, 1323, 1352, 1568, 1800, 1944, 2000, 2700, 2888, 3087, 3200, 3267, 3528, 4000, 4232, 4500, 4563, 4608, 5000];
 
 ///
 /// A powerful number is a positive integer m such that for every prime number p dividing m, p2 also divides m
@@ -63,10 +64,34 @@ pub fn is_powerful(testee: i32) -> bool {
 
 #[test]
 fn test_is_powerful(){
-    rayon::prelude::ParallelIterator::for_each(rayon::prelude::IntoParallelIterator::into_par_iter(TEST_POWERFUL), |i| {
+    rayon::prelude::IntoParallelIterator::into_par_iter(TEST_POWERFUL).for_each(|i| {
         assert_eq!(true, is_powerful(i));
     });
     assert_eq!(false, is_powerful(19));
     assert_eq!(false, is_powerful(-20));
     assert_eq!(false, is_powerful(-25));
+}
+
+pub fn is_achilles(testee: i32) -> bool {
+    if is_powerful(testee){
+        let unsigned_testee:u64 = testee.unsigned_abs() as u64;
+        let factor_factory: Factorization<u64> = Factorization::run(unsigned_testee);
+        let prime_factors:Vec<(u64, u32)> = factor_factory.prime_factor_repr();
+        for factor in prime_factors{
+            let factor_squared = factor.0.pow(2);
+            if unsigned_testee % factor_squared != 0 {return false;}
+        }
+        return  true;
+    };
+    false
+}
+
+#[test]
+fn test_is_achilles(){
+    rayon::prelude::IntoParallelIterator::into_par_iter(TEST_ACHILLES).for_each(|i| {
+        assert_eq!(true, is_achilles(i));
+    });
+    assert_eq!(false, is_achilles(360));
+    assert_eq!(false, is_achilles(784));
+    assert_eq!(false, is_achilles(-72));
 }

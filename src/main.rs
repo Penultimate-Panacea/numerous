@@ -8,15 +8,15 @@ mod factorization_based;
 
 
 fn main() {
-    factorization_based::TEST_POWERFUL.into_par_iter().for_each(|i| {
+    factorization_based::TEST_ACHILLES.into_par_iter().for_each(|i| {
         println!("Is {i} powerful?: {}", factorization_based::is_powerful(i));
     });
     println!("");
     println!("");
-    println!("CANDIDATE FUNCTION");
+    println!("ACHILLES");
     println!("");
     println!("");
-    factorization_based::TEST_POWERFUL.into_par_iter().for_each(|i| {
-        assert_eq!(true, factorization_based::is_powerful(i));
+    factorization_based::TEST_ACHILLES.into_par_iter().for_each(|i| {
+        println!("Is {i} achilles?: {}", factorization_based::is_achilles(i));
     });
 }
