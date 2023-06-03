@@ -1,47 +1,36 @@
 use prime_factorization::Factorization;
-use rayon::prelude::{IntoParallelIterator, ParallelIterator};
-pub const TEST_POWERFUL:[i64; 53] = [1, 4, 8, 9, 16, 25, 27, 32, 36, 49, 64, 72, 81,
+
+
+pub const TEST_POWERFUL:[i32; 52] = [1, 4, 8, 9, 16, 25, 27, 32, 36, 49, 64, 72, 81,
                                     100, 108, 121, 125, 128, 144, 169, 196, 200, 216, 
                                     225, 243, 256, 288, 289, 324, 343, 361, 392, 400, 
                                     432, 441, 484, 500, 512, 529, 576, 625, 648, 675, 
-                                    676, 729, 784, 800, 841, 864, 900, 961, 968, i64::MAX];
+                                    676, 729, 784, 800, 841, 864, 900, 961, 968];
 
 ///
 /// A powerful number is a positive integer m such that for every prime number p dividing m, p2 also divides m
-/// 
-/// 
-pub fn is_powerful(testee: i64) -> bool {
-    if testee < 0 {return false;}
-    let unsigned_testee:u64 = testee.unsigned_abs();
-    let factor_factory: Factorization<u64> = Factorization::run(unsigned_testee);
-    let prime_factors:Vec<(u64, u32)> = factor_factory.prime_factor_repr();
-    let mut num_of_squareful_factors: usize = 0;
-    for prime in &prime_factors{
-        let factor: u64 = prime.0;
-        if factor.pow(2) % unsigned_testee == 0 {
-            num_of_squareful_factors += 1;
-        }
-    }
-    if prime_factors.len() == num_of_squareful_factors {
-        return true;
-    }
-    for prime in &prime_factors{
-        let power: u32 = prime.1;
-        if power == 3 {
-            return true;
-        }
-    }
-    false
-}
-
-///
-/// 
 /// A001694
+/// Informally, given the prime factorization of m, take b to be the product of the prime factors of m that have an odd exponent
+/// (if there are none, then take b to be 1). Because m is powerful, each prime factor with an odd exponent has an exponent that 
+/// is at least 3, so m/b^3 is an integer. In addition, each prime factor of m/b^3 has an even exponent, so m/b^3 is a perfect square, 
+/// so call this a^2; then m = a^2b^3
 /// 
+///  # Arguements
 /// 
-pub fn is_powerful_candiate_function(testee: i64) -> bool {
+///  * `testee` - An i32 number to be tested 
+/// 
+///  # Example
+///  ```
+/// TEST_POWERFUL.into_par_iter().for_each(|i| {
+/// assert_eq!(true, is_powerful(i));};
+/// ```    
+/// 
+///  # Todo
+///  Upper limit catch, currently panics as i32:MAX integers
+/// 
+pub fn is_powerful(testee: i32) -> bool {
     if testee < 0 {return false;}
-    let unsigned_testee:u64 = testee.unsigned_abs();
+    let unsigned_testee:u64 = testee.unsigned_abs() as u64;
     let factor_factory: Factorization<u64> = Factorization::run(unsigned_testee);
     let prime_factors:Vec<(u64, u32)> = factor_factory.prime_factor_repr();
     let mut b;
@@ -68,4 +57,11 @@ pub fn is_powerful_candiate_function(testee: i64) -> bool {
     let test: u64 = radicand_of_a * b.pow(3);
     if unsigned_testee == test {return true;}
     false
+}
+
+#[test]
+fn test_is_powerful(){
+    rayon::prelude::ParallelIterator::for_each(rayon::prelude::IntoParallelIterator::into_par_iter(TEST_POWERFUL), |i| {
+        assert_eq!(true, is_powerful(i));
+    });
 }
