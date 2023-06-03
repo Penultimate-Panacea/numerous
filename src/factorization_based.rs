@@ -19,6 +19,12 @@ pub fn is_powerful(testee: i64) -> bool {
     if prime_factors.len() == num_of_squareful_factors {
         return true;
     }
+    for prime in &prime_factors{
+        let power = prime.1;
+        if power == 3 {
+            return true;
+        }
+    }
     false
 }
 
