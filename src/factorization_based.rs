@@ -119,5 +119,8 @@ fn test_is_perfect_power(){
     rayon::prelude::ParallelIterator::for_each(rayon::prelude::IntoParallelIterator::into_par_iter(TEST_PERFECT), |i| {
         assert_eq!(true, is_perfect_power(i));
     });
+    assert_eq!(false, is_perfect_power(360));
+    assert_eq!(false, is_perfect_power(784));
+    assert_eq!(false, is_perfect_power(-72));    
 
 }
