@@ -17,6 +17,10 @@ fn main() {
     });
     println!("PERFECT");
     factorization_based::TEST_PERFECT.into_par_iter().for_each(|i| {
-        println!("Is {i} powerful?: {}", factorization_based::is_perfect_power(i));
+        println!("Is {i} perfect powerful?: {}", factorization_based::is_perfect_power(i));
+    });
+    println!("SEMIPRIME");
+    factorization_based::TEST_SEMIPRIME.into_par_iter().for_each(|i| {
+        println!("Is {i} semiprime?: {}", factorization_based::is_semiprime(i));
     });
 }

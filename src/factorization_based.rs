@@ -10,6 +10,7 @@ pub const TEST_ACHILLES:[i32; 30] = [72, 108, 200, 288, 392, 500, 648, 675, 800,
 pub const TEST_PERFECT:[i32; 30] = [4, 8, 9, 16, 25, 27, 32, 36, 49, 64,
                                     81, 100, 121, 125, 128, 144, 169, 196, 216, 225,
                                     243, 256, 289, 324, 343, 361, 400, 441, 484, 512];
+pub const TEST_SEMIPRIME:[i32; 30] = [4, 6, 9, 10, 14, 15, 21, 22, 25, 26, 33, 34, 35, 38, 39, 46, 49, 51, 55, 57, 58, 62, 65, 69, 74, 77, 82, 85, 86, 87];
 ///
 /// A powerful number is a positive integer m such that for every prime number p dividing m, p2 also divides m. 
 /// Behavior described in OEIS A001694. 
@@ -164,5 +165,30 @@ fn test_is_perfect_power(){
     assert!(!is_perfect_power(360));
     assert!(!is_perfect_power(785));
     assert!(!is_perfect_power(-72));    
+
+}
+
+pub fn is_semiprime(testee: i32) -> bool{
+    if testee < 4 {return false;}
+    let unsigned_testee:u64 = u64::from(testee.unsigned_abs());
+    let factor_factory: Factorization<u64> = Factorization::run(unsigned_testee);
+    let prime_factors:Vec<(u64, u32)> = factor_factory.prime_factor_repr();
+    if prime_factors.len() == 2{
+        return true;
+    }
+    if prime_factors.len() == 1 && prime_factors[0].1 == 2 {
+        return true;
+    }    
+false
+}
+
+#[test]
+fn test_is_semiprime(){
+    rayon::prelude::ParallelIterator::for_each(rayon::prelude::IntoParallelIterator::into_par_iter(TEST_SEMIPRIME), |i| {
+    assert!(is_semiprime(i));
+});
+assert!(!is_semiprime(19));
+assert!(!is_semiprime(786));
+assert!(!is_semiprime(-72));    
 
 }
