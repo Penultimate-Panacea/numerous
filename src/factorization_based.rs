@@ -245,7 +245,8 @@ fn test_is_sphenic(){
     rayon::prelude::ParallelIterator::for_each(rayon::prelude::IntoParallelIterator::into_par_iter(TEST_SPHENIC), |i| {
     assert!(is_sphenic(i));
     assert!(!is_sphenic(19));
-assert!(!is_sphenic(786));
+assert!(is_sphenic(786));
+assert!(!is_sphenic(788));
 assert!(!is_sphenic(72));   
 });
 }
