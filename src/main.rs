@@ -23,4 +23,8 @@ fn main() {
     factorization_based::TEST_SEMIPRIME.into_par_iter().for_each(|i| {
         println!("Is {i} semiprime?: {}", factorization_based::is_semiprime(i));
     });
+    println!("SPHENIC");
+    factorization_based::TEST_SPHENIC.into_par_iter().for_each(|i| {
+        println!("Is {i} sphenic?: {}", factorization_based::is_sphenic(i));
+    });
 }
