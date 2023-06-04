@@ -135,8 +135,8 @@ fn test_is_achilles(){
 ///  # Example
 ///  ``` let perfect: i32 = 500;
 /// let not_perfect: i32 = 500;
-/// assert!(is_perfect_power(achilles_num);
-/// assert!(!is_perfect_power(not_achilles_num))
+/// assert!(is_perfect_power(perfect));
+/// assert!(!is_perfect_power(not_perfect));
 /// ```    
 /// 
 ///  # Todo
@@ -168,6 +168,24 @@ fn test_is_perfect_power(){
 
 }
 
+///
+/// A semiprime is the product of exactly two primes
+/// Behavior described in OEIS A001358. 
+/// 
+///  # Arguements
+/// 
+///  * `testee` - An i32 number to be tested 
+/// 
+///  # Example
+///  ``` let semiprime: i32 = 9;
+/// let not_semiprime: i32 = 500;
+/// assert!(is_semiprime(semiprime));
+/// assert!(!is_semiprime(not_semiprime));
+/// ```    
+/// 
+///  # Todo
+///  Upper limit catch, currently panics as i32:MAX integers
+/// 
 pub fn is_semiprime(testee: i32) -> bool{
     if testee < 4 {return false;}
     let unsigned_testee:u64 = u64::from(testee.unsigned_abs());
