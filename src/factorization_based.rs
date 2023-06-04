@@ -11,8 +11,10 @@ pub const TEST_PERFECT:[i32; 30] = [4, 8, 9, 16, 25, 27, 32, 36, 49, 64,
                                     81, 100, 121, 125, 128, 144, 169, 196, 216, 225,
                                     243, 256, 289, 324, 343, 361, 400, 441, 484, 512];
 ///
-/// A powerful number is a positive integer m such that for every prime number p dividing m, p2 also divides m
-/// A001694
+/// A powerful number is a positive integer m such that for every prime number p dividing m, p2 also divides m. 
+/// Behavior described in OEIS A001694. 
+/// 
+/// For this test we take the informal definition of a powerful number as described on wikipedia: 
 /// Informally, given the prime factorization of m, take b to be the product of the prime factors of m that have an odd exponent
 /// (if there are none, then take b to be 1). Because m is powerful, each prime factor with an odd exponent has an exponent that 
 /// is at least 3, so m/b^3 is an integer. In addition, each prime factor of m/b^3 has an even exponent, so m/b^3 is a perfect square, 
@@ -25,8 +27,8 @@ pub const TEST_PERFECT:[i32; 30] = [4, 8, 9, 16, 25, 27, 32, 36, 49, 64,
 ///  # Example
 ///  ``` let powerful_num: i32 = 200;
 /// let not_powerful_num: i32 = 19;
-/// assert_eq!(true, is_powerful(powerful_num);
-/// assert_eq!(false, is_powerful())
+/// assert!(is_powerful(powerful_num);
+/// assert!(!is_powerful(not_powerful_num))
 /// ```    
 /// 
 ///  # Todo
@@ -34,7 +36,7 @@ pub const TEST_PERFECT:[i32; 30] = [4, 8, 9, 16, 25, 27, 32, 36, 49, 64,
 /// 
 pub fn is_powerful(testee: i32) -> bool {
     if testee < 0 {return false;}
-    let unsigned_testee:u64 = testee.unsigned_abs() as u64;
+    let unsigned_testee:u64 = u64::from(testee.unsigned_abs());
     let factor_factory: Factorization<u64> = Factorization::run(unsigned_testee);
     let prime_factors:Vec<(u64, u32)> = factor_factory.prime_factor_repr();
     let mut b;
@@ -66,18 +68,38 @@ pub fn is_powerful(testee: i32) -> bool {
 #[test]
 fn test_is_powerful(){
     rayon::prelude::ParallelIterator::for_each(rayon::prelude::IntoParallelIterator::into_par_iter(TEST_POWERFUL), |i| {
-        assert_eq!(true, is_powerful(i));
+        assert!(is_powerful(i));
     });
-    assert_eq!(false, is_powerful(19));
-    assert_eq!(false, is_powerful(-20));
-    assert_eq!(false, is_powerful(-25));
+    assert!(!is_powerful(19));
+    assert!(!is_powerful(-20));
+    assert!(!is_powerful(-25));
 }
 
+///
+/// An achilles number is a powerful number which is not a perfect power. 
+/// Behavior described in OEIS A052486. 
+/// 
+/// From Wikipedia:  positive integer n is a powerful number if, for every prime factor p of n, p2 is also a divisor. In other words, every prime factor appears at least squared in the factorization. All Achilles numbers are powerful. However, not all powerful numbers are Achilles numbers: only those that cannot be represented as mk, where m and k are positive integers greater than 1.
+/// 
+///  # Arguements
+/// 
+///  * `testee` - An i32 number to be tested 
+/// 
+///  # Example
+///  ``` let achilles_num: i32 = 500;
+/// let not_achilles_num: i32 = 784;
+/// assert!(is_achilles(achilles_num);
+/// assert!(!is_achilles(not_achilles_num))
+/// ```    
+/// 
+///  # Todo
+///  Upper limit catch, currently panics as i32:MAX integers
+/// 
 pub fn is_achilles(testee: i32) -> bool {
     if is_perfect_power(testee) {return false;}
     if is_powerful(testee){
         if is_perfect_power(testee) {return false;}
-        let unsigned_testee:u64 = testee.unsigned_abs() as u64;
+        let unsigned_testee:u64 = u64::from(testee.unsigned_abs());
         let factor_factory: Factorization<u64> = Factorization::run(unsigned_testee);
         let prime_factors:Vec<(u64, u32)> = factor_factory.prime_factor_repr();
         for factor in prime_factors{
@@ -92,16 +114,36 @@ pub fn is_achilles(testee: i32) -> bool {
 #[test]
 fn test_is_achilles(){
     rayon::prelude::ParallelIterator::for_each(rayon::prelude::IntoParallelIterator::into_par_iter(TEST_ACHILLES), |i| {
-        assert_eq!(true, is_achilles(i));
+        assert!(is_achilles(i));
     });
-    assert_eq!(false, is_achilles(360));
-    assert_eq!(false, is_achilles(784));
-    assert_eq!(false, is_achilles(-72));
+    assert!(!is_achilles(360));
+    assert!(!is_achilles(784));
+    assert!(!is_achilles(-72));
 }
 
+///
+/// An pefect power is a is a natural number that can be described as a n-th power of a single natural number
+/// Behavior described in OEIS A052486. 
+/// 
+/// From Wikipedia: n is a perfect power if there exist natural numbers m > 1, and k > 1 such that mk = n. In this case, n may be called a perfect kth power. If k = 2 or k = 3, then n is called a perfect square or perfect cube, respectively. Sometimes 0 and 1 are also considered perfect powers (0k = 0 for any k > 0, 1k = 1 for any k). 
+/// 
+///  # Arguements
+/// 
+///  * `testee` - An i32 number to be tested 
+/// 
+///  # Example
+///  ``` let perfect: i32 = 500;
+/// let not_perfect: i32 = 500;
+/// assert!(is_perfect_power(achilles_num);
+/// assert!(!is_perfect_power(not_achilles_num))
+/// ```    
+/// 
+///  # Todo
+///  Upper limit catch, currently panics as i32:MAX integers
+/// 
 pub fn is_perfect_power(testee: i32) -> bool {
     if !is_powerful(testee) {return false;};
-    let unsigned_testee: u64 = testee.unsigned_abs() as u64;
+    let unsigned_testee: u64 = u64::from(testee.unsigned_abs());
     let factor_factory: Factorization<u64> = Factorization::run(unsigned_testee);
     let prime_factors:Vec<(u64, u32)> = factor_factory.prime_factor_repr();
     let mut gcd_of_prime_powers = prime_factors[0].1;
@@ -117,10 +159,10 @@ false
 #[test]
 fn test_is_perfect_power(){
     rayon::prelude::ParallelIterator::for_each(rayon::prelude::IntoParallelIterator::into_par_iter(TEST_PERFECT), |i| {
-        assert_eq!(true, is_perfect_power(i));
+        assert!(is_perfect_power(i));
     });
-    assert_eq!(false, is_perfect_power(360));
-    assert_eq!(false, is_perfect_power(784));
-    assert_eq!(false, is_perfect_power(-72));    
+    assert!(!is_perfect_power(360));
+    assert!(!is_perfect_power(785));
+    assert!(!is_perfect_power(-72));    
 
 }
