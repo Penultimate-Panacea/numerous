@@ -2,16 +2,23 @@ use gcd::Gcd;
 use prime_factorization::Factorization;
 
 pub const TEST_POWERFUL:[i32; 30] = [1, 4, 8, 9, 16, 25, 27, 32, 36, 49,
-                                    64, 72, 81, 100, 108, 121, 125, 128, 144, 169,
-                                    196, 200, 216, 225, 243, 256, 288, 289, 324, 343];
+                                     64, 72, 81, 100, 108, 121, 125, 128, 144, 169,
+                                     196, 200, 216, 225, 243, 256, 288, 289, 324, 343];
 pub const TEST_ACHILLES:[i32; 30] = [72, 108, 200, 288, 392, 500, 648, 675, 800, 968,
                                     972, 1125, 1323, 1352, 1568, 1800, 1944, 2000, 2700, 2888,
-                                    3087, 3200, 3267, 3528, 4000, 4232, 4500, 4563, 4608, 5000];
+                                     3087, 3200, 3267, 3528, 4000, 4232, 4500, 4563, 4608, 5000];
 pub const TEST_PERFECT:[i32; 30] = [4, 8, 9, 16, 25, 27, 32, 36, 49, 64,
                                     81, 100, 121, 125, 128, 144, 169, 196, 216, 225,
                                     243, 256, 289, 324, 343, 361, 400, 441, 484, 512];
-pub const TEST_SEMIPRIME:[i32; 30] = [4, 6, 9, 10, 14, 15, 21, 22, 25, 26, 33, 34, 35, 38, 39, 46, 49, 51, 55, 57, 58, 62, 65, 69, 74, 77, 82, 85, 86, 87];
-pub const TEST_SPHENIC: [i32; 30] = [30, 42, 66, 70, 78, 102, 105, 110, 114, 130, 138, 154, 165, 170, 174, 182, 186, 190, 195, 222, 230, 231, 238, 246, 255, 258, 266, 273, 282, 285];
+pub const TEST_SEMIPRIME:[i32; 30] = [4, 6, 9, 10, 14, 15, 21, 22, 25, 26,
+                                      33, 34, 35, 38, 39, 46, 49, 51, 55, 57,
+                                      58, 62, 65, 69, 74, 77, 82, 85, 86, 87];
+pub const TEST_SPHENIC: [i32; 30] = [30, 42, 66, 70, 78, 102, 105, 110, 114, 130,
+                                    138, 154, 165, 170, 174, 182, 186, 190, 195, 222,
+                                    230, 231, 238, 246, 255, 258, 266, 273, 282, 285];
+pub const TEST_SQUAREFREE: [i32; 30] = [1, 2, 3, 5, 6, 7, 10, 11, 13, 14, 
+                                        15, 17, 19, 21, 22, 23, 26, 29, 30, 31, 
+                                        33, 34, 35, 37, 38, 39, 41, 42, 43, 46];
 ///
 /// A powerful number is a positive integer m such that for every prime number p dividing m, p2 also divides m. 
 /// Behavior described in OEIS A001694. 
@@ -222,8 +229,8 @@ assert!(!is_semiprime(-72));
 /// 
 ///  # Example
 ///  ``` let sphenic: i32 = 30;
-/// let not_spenhic: i32 = 24;
-/// assert!(is_spehenic(sphenic));
+/// let not_sphenic: i32 = 24;
+/// assert!(is_sphenic(sphenic));
 /// assert!(!is_shphenic(not_sphenic));
 /// ```    
 /// 
@@ -245,8 +252,44 @@ fn test_is_sphenic(){
     rayon::prelude::ParallelIterator::for_each(rayon::prelude::IntoParallelIterator::into_par_iter(TEST_SPHENIC), |i| {
     assert!(is_sphenic(i));
     assert!(!is_sphenic(19));
-assert!(is_sphenic(786));
-assert!(!is_sphenic(788));
-assert!(!is_sphenic(72));   
-});
+    assert!(is_sphenic(786));
+    assert!(!is_sphenic(788));
+    assert!(!is_sphenic(72));   
+});}
+//
+/// A sqaurefree integer is the product of unique prime factors, no prime factor has a power greater than one 
+/// Behavior described in OEIS A005117. 
+/// 
+///  # Arguements
+/// 
+///  * `testee` - An i32 number to be tested 
+/// 
+///  # Example
+///  ``` let squarefree: i32 = 10;
+/// let not_squarefree: i32 = 18;
+/// assert!(is_squarefree(squarefree));
+/// assert!(!is_squarefree(not_squarefree));
+/// ```    
+/// 
+///  # Todo
+///  Upper limit catch, currently panics as i32:MAX integers
+/// 
+///  I do not like how the tail for this function returns true, while all other test functions' tails return false.
+/// 
+pub fn is_squarefree(testee: i32) -> bool {
+    let unsigned_testee:u64 = u64::from(testee.unsigned_abs());
+    let factor_factory: Factorization<u64> = Factorization::run(unsigned_testee);
+    let prime_factors:Vec<(u64, u32)> = factor_factory.prime_factor_repr();
+    for prime in prime_factors{
+        if prime.1 > 1 {return false;}
+    }
+    true
 }
+
+#[test]
+fn test_is_squarefree(){
+    rayon::prelude::ParallelIterator::for_each(rayon::prelude::IntoParallelIterator::into_par_iter(TEST_SQUAREFREE), |i| {
+        assert!(is_squarefree(i));
+        assert!(!is_sphenic(8));
+        assert!(!is_sphenic(9));
+});}
