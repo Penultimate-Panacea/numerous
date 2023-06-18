@@ -1,6 +1,3 @@
-[build]
-rustc-wrapper = "/path/to/sccache"
-
 [package]
 name = "numerous"
 version = "0.1.0"
