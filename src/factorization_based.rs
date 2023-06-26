@@ -384,19 +384,27 @@ pub fn is_smooth(testee: i32, smoothing: i32) -> bool {
 /// # Example
 ///
 /// ``` rust
-/// let five_smooth: i32 = 384;
-/// let three_smooth: i32 = 240;
-/// assert!(is_smooth(five_smooth, 5));
-/// assert!(!is_smooth(three_smooth, 5));
-/// assert!(is_smooth(three_smooth, 3));
+//
 /// ```
 ///
 pub fn is_rough(testee: i32, rough: i32) -> bool {
+        let unsigned_testee:u64 = u64::from(testee.unsigned_abs());
+        let factor_factory: Factorization<u64> = Factorization::run(unsigned_testee);
+        let prime_factors:Vec<(u64, u32)> = factor_factory.prime_factor_repr();
+    let least_factor: i32 = prime_factors.first().unwrap().0 as i32;
+    if least_factor > rough{
+        return true;
+    }
+    false
+}
+
+pub fn is_unusual(testee: i32) -> bool {
     let unsigned_testee:u64 = u64::from(testee.unsigned_abs());
     let factor_factory: Factorization<u64> = Factorization::run(unsigned_testee);
     let prime_factors:Vec<(u64, u32)> = factor_factory.prime_factor_repr();
-    let least_factor: i32 = prime_factors.first().unwrap().0 as i32;
-    if least_factor > rough{
+    let max_factor: i32 = prime_factors.last().unwrap().0 as i32;
+    let sqrt = f64::from(testee).sqrt();
+    if max_factor as f64 > sqrt{
         return true;
     }
     false
