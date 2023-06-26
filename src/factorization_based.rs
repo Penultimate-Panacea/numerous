@@ -20,9 +20,9 @@ pub const TEST_SPHENIC: [i32; 30] = [30, 42, 66, 70, 78, 102, 105, 110, 114, 130
 pub const TEST_SQUAREFREE: [i32; 30] = [1, 2, 3, 5, 6, 7, 10, 11, 13, 14, 
                                         15, 17, 19, 21, 22, 23, 26, 29, 30, 31, 
                                         33, 34, 35, 37, 38, 39, 41, 42, 43, 46];
-pub const TEST_PRONIC: [i32; 30] = [0, 2, 6, 12, 20, 30, 42, 56, 72, 90,
+pub const TEST_PRONIC: [i32; 30] = [2, 6, 12, 20, 30, 42, 56, 72, 90,
                                     110, 132, 156, 182, 210, 240, 272, 306, 342, 380,
-                                    420, 462, 506, 552, 600, 650, 702, 756, 812, 870];
+                                    420, 462, 506, 552, 600, 650, 702, 756, 812, 870, 930];
 ///
 /// A powerful number is a positive integer m such that for every prime number p dividing m, p2 also divides m. 
 /// Behavior described in OEIS A001694. s
@@ -339,7 +339,8 @@ pub fn is_pronic(testee: i32) -> bool {
 
 #[test]
 fn test_is_pronic(){
-        assert!(is_pronic(0));
+    rayon::prelude::ParallelIterator::for_each(rayon::prelude::IntoParallelIterator::into_par_iter(TEST_PRONIC), |i| {
+        assert!(is_pronic(i));});
         assert!(!is_pronic(8));
         assert!(!is_pronic(10));
 }
