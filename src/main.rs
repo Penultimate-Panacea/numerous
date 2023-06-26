@@ -15,10 +15,6 @@ fn main() {
     factorization_based::TEST_ACHILLES.into_par_iter().for_each(|i| {
         println!("Is {i} achilles?: {}", factorization_based::is_achilles(i));
     });
-    println!("POWERFUL");
-    factorization_based::TEST_POWERFUL.into_par_iter().for_each(|i| {
-        println!("Is {i}  powerful?: {}", factorization_based::is_powerful(i));
-    });
     println!("PERFECT");
     factorization_based::TEST_PERFECT.into_par_iter().for_each(|i| {
         println!("Is {i} perfect powerful?: {}", factorization_based::is_perfect_power(i));
