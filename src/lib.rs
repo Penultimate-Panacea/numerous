@@ -394,6 +394,22 @@ mod tests{
     use super::*;
 
     #[test]
+    fn test_is_unusual(){
+        assert!(factor::is_unusual(46));
+        assert!(!factor::is_unusual(45));
+    }
+
+    fn test_is_rough(){
+        assert!(factor::is_rough(43, 13));
+        assert!(!factor::is_rough(42, 13));
+    }
+
+    fn test_is_smooth(){
+        assert!(factor::is_smooth(81, 5));
+        assert!(factor::is_smooth(82, 5));
+    }
+
+    #[test]
     fn test_is_pronic(){
         for i in &factor::TEST_PRONIC {
             assert!(factor::is_pronic(*i));}
