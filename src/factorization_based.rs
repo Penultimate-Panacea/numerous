@@ -1,3 +1,6 @@
+#![allow(clippy::cast_sign_loss)] // For is_unusual
+#![allow(clippy::cast_possible_truncation)] //For is_unusual
+
 use gcd::Gcd;
 use prime_factorization::Factorization;
 use integer_sqrt::IntegerSquareRoot;
@@ -81,9 +84,9 @@ pub fn is_powerful(testee: i32) -> bool {
 
 #[test]
 fn test_is_powerful(){
-    rayon::prelude::ParallelIterator::for_each(rayon::prelude::IntoParallelIterator::into_par_iter(TEST_POWERFUL), |i| {
+    for &i in &TEST_POWERFUL {
         assert!(is_powerful(i));
-    });
+    }
     assert!(!is_powerful(19));
     assert!(!is_powerful(-20));
     assert!(!is_powerful(-25));
@@ -128,9 +131,9 @@ pub fn is_achilles(testee: i32) -> bool {
 
 #[test]
 fn test_is_achilles(){
-    rayon::prelude::ParallelIterator::for_each(rayon::prelude::IntoParallelIterator::into_par_iter(TEST_ACHILLES), |i| {
+    for &i in &TEST_ACHILLES {
         assert!(is_achilles(i));
-    });
+    }
     assert!(!is_achilles(360));
     assert!(!is_achilles(784));
     assert!(!is_achilles(-72));
@@ -174,9 +177,9 @@ false
 
 #[test]
 fn test_is_perfect_power(){
-    rayon::prelude::ParallelIterator::for_each(rayon::prelude::IntoParallelIterator::into_par_iter(TEST_PERFECT), |i| {
+    for &i in &TEST_PERFECT {
         assert!(is_perfect_power(i));
-    });
+    }
     assert!(!is_perfect_power(360));
     assert!(!is_perfect_power(785));
     assert!(!is_perfect_power(-72));    
@@ -218,12 +221,12 @@ false
 
 #[test]
 fn test_is_semiprime(){
-    rayon::prelude::ParallelIterator::for_each(rayon::prelude::IntoParallelIterator::into_par_iter(TEST_SEMIPRIME), |i| {
+    for &i in &TEST_SEMIPRIME {
     assert!(is_semiprime(i));
     assert!(!is_semiprime(19));
 assert!(!is_semiprime(786));
 assert!(!is_semiprime(-72));   
-});
+}
 }
 
 
@@ -258,13 +261,14 @@ false
 
 #[test]
 fn test_is_sphenic(){
-    rayon::prelude::ParallelIterator::for_each(rayon::prelude::IntoParallelIterator::into_par_iter(TEST_SPHENIC), |i| {
+    for &borrow_i in &(TEST_SPHENIC) {
+    let i: i32 = borrow_i;
     assert!(is_sphenic(i));
     assert!(!is_sphenic(19));
     assert!(is_sphenic(786));
     assert!(!is_sphenic(788));
     assert!(!is_sphenic(72));   
-});}
+}}
 //
 /// A sqaurefree integer is the product of unique prime factors, no prime factor has a power greater than one 
 /// Behavior described in OEIS A005117. 
@@ -298,11 +302,12 @@ pub fn is_squarefree(testee: i32) -> bool {
 
 #[test]
 fn test_is_squarefree(){
-    rayon::prelude::ParallelIterator::for_each(rayon::prelude::IntoParallelIterator::into_par_iter(TEST_SQUAREFREE), |i| {
-        assert!(is_squarefree(i));
+    for i in &TEST_SQUAREFREE {
+        assert!(is_squarefree(*i));
         assert!(!is_squarefree(8));
         assert!(!is_squarefree(9));
-});}
+}
+}
 
 /// Checks if a number is a pronic number.
 ///
@@ -339,8 +344,8 @@ pub fn is_pronic(testee: i32) -> bool {
 
 #[test]
 fn test_is_pronic(){
-    rayon::prelude::ParallelIterator::for_each(rayon::prelude::IntoParallelIterator::into_par_iter(TEST_PRONIC), |i| {
-        assert!(is_pronic(i));});
+    for i in &TEST_PRONIC {
+        assert!(is_pronic(*i));}
         assert!(!is_pronic(8));
         assert!(!is_pronic(10));
 }
@@ -351,7 +356,7 @@ fn test_is_pronic(){
 /// # Arguments
 ///
 /// * `testee` - An i32 number to be tested.
-/// * `smooth` - The factor by which the smoothness is to be tested
+/// * `smooth` - The factor by which the smoothness is to be tested, cannot be negative
 ///
 /// # Example
 ///
@@ -363,12 +368,12 @@ fn test_is_pronic(){
 /// assert!(is_smooth(three_smooth, 3));
 /// ```
 ///
-pub fn is_smooth(testee: i32, smoothing: i32) -> bool {
+pub fn is_smooth(testee: i32, smoothing: u32) -> bool {
     let unsigned_testee:u64 = u64::from(testee.unsigned_abs());
     let factor_factory: Factorization<u64> = Factorization::run(unsigned_testee);
     let prime_factors:Vec<(u64, u32)> = factor_factory.prime_factor_repr();
-    let max_factor: i32 = prime_factors.last().unwrap().0 as i32;
-    if smoothing <= max_factor{
+    let max_factor: u64 = prime_factors.last().unwrap().0;
+    if u64::from(smoothing) <= max_factor{
         return true;
     }
     false
@@ -387,24 +392,28 @@ pub fn is_smooth(testee: i32, smoothing: i32) -> bool {
 //
 /// ```
 ///
-pub fn is_rough(testee: i32, rough: i32) -> bool {
+pub fn is_rough(testee: i32, rough: u32) -> bool {
         let unsigned_testee:u64 = u64::from(testee.unsigned_abs());
         let factor_factory: Factorization<u64> = Factorization::run(unsigned_testee);
         let prime_factors:Vec<(u64, u32)> = factor_factory.prime_factor_repr();
-    let least_factor: i32 = prime_factors.first().unwrap().0 as i32;
-    if least_factor > rough{
+    let least_factor: u64 = prime_factors.first().unwrap().0;
+    if least_factor > u64::from(rough){
         return true;
     }
     false
 }
 
+
 pub fn is_unusual(testee: i32) -> bool {
     let unsigned_testee:u64 = u64::from(testee.unsigned_abs());
     let factor_factory: Factorization<u64> = Factorization::run(unsigned_testee);
     let prime_factors:Vec<(u64, u32)> = factor_factory.prime_factor_repr();
-    let max_factor: i32 = prime_factors.last().unwrap().0 as i32;
-    let sqrt = f64::from(testee).sqrt();
-    if max_factor as f64 > sqrt{
+    let max_factor: u64 = prime_factors.last().unwrap().0;
+    let sqrt = f64::from(testee).sqrt();    
+    if max_factor >= sqrt.floor() as u64 {
+        return true;
+    }
+    if max_factor == sqrt.floor() as u64 && sqrt.fract() > 0.0{
         return true;
     }
     false

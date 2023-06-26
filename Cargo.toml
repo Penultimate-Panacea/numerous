@@ -16,4 +16,3 @@ categories = ["mathematics"]
 gcd = "2.3.0"
 integer-sqrt = "0.1.5"
 prime_factorization = "1.0.3"
-rayon = "1.7.0"
