@@ -344,3 +344,37 @@ fn test_is_pronic(){
         assert!(!is_pronic(8));
         assert!(!is_pronic(10));
 }
+
+
+/// Checks if a number is a smooth number to the n-th degree.
+/// 
+/// # Arguments
+///
+/// * `testee` - An i32 number to be tested.
+/// * `smooth` - The factor by which the smoothness is to be tested
+///
+/// # Example
+///
+/// ``` rust
+/// let five_smooth: i32 = 384;
+/// let three_smooth: i32 = 240;
+/// assert!(is_smooth(five_smooth, 5));
+/// assert!(!is_smooth(three_smooth, 5));
+/// assert!(is_smooth(three_smooth, 3));
+/// ```
+///
+pub fn is_smooth(testee: i32, smoothing: i32) -> bool {
+    let unsigned_testee:u64 = u64::from(testee.unsigned_abs());
+    let factor_factory: Factorization<u64> = Factorization::run(unsigned_testee);
+    let prime_factors:Vec<(u64, u32)> = factor_factory.prime_factor_repr();
+    let max_factor: i32 = prime_factors.last().unwrap().0 as i32;
+    if smoothing <= max_factor{
+        return true;
+    }
+    false
+}
+
+#[test]
+fn test_is_smooth(){
+    
+}
