@@ -31,4 +31,8 @@ fn main() {
     factorization_based::TEST_SQUAREFREE.into_par_iter().for_each(|i| {
         println!("Is {i} sphenic?: {}", factorization_based::is_squarefree(i));
     });
+    println!("SQUAREFREE");
+    factorization_based::TEST_PRONIC.into_par_iter().for_each(|i| {
+        println!("Is {i} sphenic?: {}", factorization_based::is_pronic(i));
+    });
 }

@@ -1,5 +1,6 @@
 use gcd::Gcd;
 use prime_factorization::Factorization;
+use integer_sqrt::IntegerSquareRoot;
 
 pub const TEST_POWERFUL:[i32; 30] = [1, 4, 8, 9, 16, 25, 27, 32, 36, 49,
                                      64, 72, 81, 100, 108, 121, 125, 128, 144, 169,
@@ -19,9 +20,12 @@ pub const TEST_SPHENIC: [i32; 30] = [30, 42, 66, 70, 78, 102, 105, 110, 114, 130
 pub const TEST_SQUAREFREE: [i32; 30] = [1, 2, 3, 5, 6, 7, 10, 11, 13, 14, 
                                         15, 17, 19, 21, 22, 23, 26, 29, 30, 31, 
                                         33, 34, 35, 37, 38, 39, 41, 42, 43, 46];
+pub const TEST_PRONIC: [i32; 30] = [0, 2, 6, 12, 20, 30, 42, 56, 72, 90,
+                                    110, 132, 156, 182, 210, 240, 272, 306, 342, 380,
+                                    420, 462, 506, 552, 600, 650, 702, 756, 812, 870];
 ///
 /// A powerful number is a positive integer m such that for every prime number p dividing m, p2 also divides m. 
-/// Behavior described in OEIS A001694. 
+/// Behavior described in OEIS A001694. s
 /// 
 /// For this test we take the informal definition of a powerful number as described on wikipedia: 
 /// Informally, given the prime factorization of m, take b to be the product of the prime factors of m that have an odd exponent
@@ -34,10 +38,11 @@ pub const TEST_SQUAREFREE: [i32; 30] = [1, 2, 3, 5, 6, 7, 10, 11, 13, 14,
 ///  * `testee` - An i32 number to be tested 
 /// 
 ///  # Example
-///  ``` let powerful_num: i32 = 200;
+///  ``` rust
+/// let powerful_num: i32 = 200;
 /// let not_powerful_num: i32 = 19;
 /// assert!(is_powerful(powerful_num);
-/// assert!(!is_powerful(not_powerful_num))
+/// assert!(!is_powerful(not_powerful_num));
 /// ```    
 /// 
 ///  # Todo
@@ -95,10 +100,11 @@ fn test_is_powerful(){
 ///  * `testee` - An i32 number to be tested 
 /// 
 ///  # Example
-///  ``` let achilles_num: i32 = 500;
+///  ``` rust
+/// let achilles_num: i32 = 500;
 /// let not_achilles_num: i32 = 784;
 /// assert!(is_achilles(achilles_num);
-/// assert!(!is_achilles(not_achilles_num))
+/// assert!(!is_achilles(not_achilles_num));
 /// ```    
 /// 
 ///  # Todo
@@ -141,7 +147,8 @@ fn test_is_achilles(){
 ///  * `testee` - An i32 number to be tested 
 /// 
 ///  # Example
-///  ``` let perfect: i32 = 500;
+///  ``` rust
+/// let perfect: i32 = 500;
 /// let not_perfect: i32 = 500;
 /// assert!(is_perfect_power(perfect));
 /// assert!(!is_perfect_power(not_perfect));
@@ -185,7 +192,8 @@ fn test_is_perfect_power(){
 ///  * `testee` - An i32 number to be tested 
 /// 
 ///  # Example
-///  ``` let semiprime: i32 = 9;
+///  ``` rust
+/// let semiprime: i32 = 9;
 /// let not_semiprime: i32 = 500;
 /// assert!(is_semiprime(semiprime));
 /// assert!(!is_semiprime(not_semiprime));
@@ -228,7 +236,8 @@ assert!(!is_semiprime(-72));
 ///  * `testee` - An i32 number to be tested 
 /// 
 ///  # Example
-///  ``` let sphenic: i32 = 30;
+///  ``` rust
+/// let sphenic: i32 = 30;
 /// let not_sphenic: i32 = 24;
 /// assert!(is_sphenic(sphenic));
 /// assert!(!is_shphenic(not_sphenic));
@@ -265,7 +274,8 @@ fn test_is_sphenic(){
 ///  * `testee` - An i32 number to be tested 
 /// 
 ///  # Example
-///  ``` let squarefree: i32 = 10;
+///  ``` rust
+/// let squarefree: i32 = 10;
 /// let not_squarefree: i32 = 18;
 /// assert!(is_squarefree(squarefree));
 /// assert!(!is_squarefree(not_squarefree));
@@ -290,6 +300,46 @@ pub fn is_squarefree(testee: i32) -> bool {
 fn test_is_squarefree(){
     rayon::prelude::ParallelIterator::for_each(rayon::prelude::IntoParallelIterator::into_par_iter(TEST_SQUAREFREE), |i| {
         assert!(is_squarefree(i));
-        assert!(!is_sphenic(8));
-        assert!(!is_sphenic(9));
+        assert!(!is_squarefree(8));
+        assert!(!is_squarefree(9));
 });}
+
+/// Checks if a number is a pronic number.
+///
+/// A pronic number, also known as an oblong number or rectangular number,
+/// is a number that is the product of two consecutive integers.
+/// Described in OEIS A002378
+/// 
+/// # Arguments
+///
+/// * `testee` - An i32 number to be tested.
+///
+/// # Example
+///
+/// ``` rust
+/// let pronic: i32 = 6;
+/// let not_pronic: i32 = 10;
+/// assert!(is_pronic(pronic));
+/// assert!(!is_pronic(not_pronic));
+/// ```
+///
+pub fn is_pronic(testee: i32) -> bool {
+    let mut sqrt: i32 = 2;
+    if testee < 0 {return false;}
+    if testee == 0 {return true;}
+    if testee > 0 {sqrt = testee.integer_sqrt();}
+
+    for i in 0..=sqrt {
+        if i * (i + 1) == testee {
+            return true;
+        }
+    }
+    false
+}
+
+#[test]
+fn test_is_pronic(){
+        assert!(is_pronic(0));
+        assert!(!is_pronic(8));
+        assert!(!is_pronic(10));
+}
