@@ -6,7 +6,7 @@ authors = ["Rian Fantozzi"]
 description = "A set of tools to finding and classifying special numbers"
 repository = "https://github.com/Penultimate-Panacea/numerous"
 readme = "README.md"
-license = "CC0 1.0 Universal"
+license = "CC0-1.0"
 keywords = ["math", "achilles", "integers"]
 categories = ["mathematics"]
 
