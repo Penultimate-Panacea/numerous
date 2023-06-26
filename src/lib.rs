@@ -35,7 +35,7 @@ mod factor{
                                         420, 462, 506, 552, 600, 650, 702, 756, 812, 870, 930];
     ///
     /// A powerful number is a positive integer m such that for every prime number p dividing m, p2 also divides m. 
-    /// Behavior described in OEIS A001694. s
+    /// Behavior described in OEIS A001694. 
     /// 
     /// For this test we take the informal definition of a powerful number as described on wikipedia: 
     /// Informally, given the prime factorization of m, take b to be the product of the prime factors of m that have an odd exponent
@@ -327,6 +327,8 @@ mod factor{
     }
 
     /// Checks if a number is a rough number to the n-th degree.
+    /// A n-rough number is a positive integer whose prime factors are all greater than or equal to n.
+    /// n-roughness has alternately been defined as requiring all prime factors to strictly exceed n.
     /// 
     /// # Arguments
     ///
@@ -336,7 +338,9 @@ mod factor{
     /// # Example
     ///
     /// ``` rust
-    //
+    /// let nineteen_rough = 241;
+    /// assert!(is_rough(nineteen_rough, 19));
+    /// assert!(!is_rough(nineteen_rough-1, 19));
     /// ```
     ///
     pub fn is_rough(testee: i32, rough: u32) -> bool {
@@ -350,7 +354,24 @@ mod factor{
         false
     }
 
-
+    /// Checks if a number is an unusual number is a natural number n whose largest prime factor is strictly greater than n {\sqrt {n}}
+    /// Behavior described in OEIS A064052. 
+    /// 
+    /// TODO, handle casting sign loss and truncation
+    /// 
+    /// # Arguments
+    ///
+    /// * `testee` - An i32 number to be tested.
+    /// * `rough` - The factor by which the roughness is to be tested
+    ///
+    /// # Example
+    ///
+    /// ``` rust
+    /// let nineteen_rough = 241;
+    /// assert!(is_rough(nineteen_rough, 19));
+    /// assert!(!is_rough(nineteen_rough-1, 19));
+    /// ```
+    ///
     pub fn is_unusual(testee: i32) -> bool {
         let unsigned_testee:u64 = u64::from(testee.unsigned_abs());
         let factor_factory: Factorization<u64> = Factorization::run(unsigned_testee);
